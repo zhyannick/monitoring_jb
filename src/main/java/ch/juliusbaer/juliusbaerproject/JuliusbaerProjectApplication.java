@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 
-@SpringBootApplication(exclude={DataSourceAutoConfiguration.class})
+@SpringBootApplication(exclude={DataSourceAutoConfiguration.class}, scanBasePackages = {"ch.juliusbaer.juliusbaerproject.services", "org.springframework.web.client"})
 public class JuliusbaerProjectApplication {
 
     public static void main(String[] args) {
