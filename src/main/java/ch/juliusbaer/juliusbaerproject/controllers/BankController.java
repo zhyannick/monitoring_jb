@@ -1,12 +1,16 @@
 package ch.juliusbaer.juliusbaerproject.controllers;
 
+import ch.juliusbaer.juliusbaerproject.models.Bank;
+import ch.juliusbaer.juliusbaerproject.services.BankingService;
 import io.micrometer.core.annotation.Timed;
 import io.micrometer.core.aop.TimedAspect;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.Counter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,9 +20,14 @@ import org.springframework.web.client.RestTemplate;
 @RequestMapping("/bank")
 public class BankController {
 
+
+    @Autowired
+    private BankingService bankingService;
+
+
     private final Counter requestCount;
 
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+
     public BankController(CollectorRegistry collectorRegistry) {
         requestCount = Counter.build()
                 .name("request_bank")
@@ -42,11 +51,10 @@ public class BankController {
 
 
         try {
-            String uri = "https://random-data-api.com/api/v2/banks?size=1";
-            RestTemplate restTemplate = new RestTemplate();
-            String result = restTemplate.getForObject(uri, String.class);
             requestCount.inc();
-            return result;
+            return bankingService.getBankDetails();
+
+
 
         } catch (Exception e){
 
@@ -54,4 +62,10 @@ public class BankController {
 
         }
     }
+
+    @GetMapping("/test")
+    public String hello(){
+        return "hello";
+    }
 }
+
